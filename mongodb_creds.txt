@@ -1,0 +1,10 @@
+link : https://account.mongodb.com/
+
+mongodb atlas login credentials:
+userid: vedvardansahni@gmail.com
+password : FsGCgAkcpUh!U2m
+
+
+cluster_connection credentials:
+id: grmongodb
+password: Mongodb321
