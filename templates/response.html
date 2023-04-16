@@ -1,0 +1,12 @@
+<div id="response_div" class="container2" formaction="http://localhost:5001/user" method = "post">
+    {% if data!="" %}
+    {% for item in data %}
+    <p>Tweet : {{ item.tweet }}</p>
+    <a name="user">User : {{ item.user }}</a>
+    {% endfor %}
+    {% endif %}
+    {% if userdata!="" %}
+    <p>User Name : {{userdata.name}}</p>
+    <p>User Screen Name : {{userdata.screenName}}</p>
+    {% endif %}
+</div>
