@@ -44,10 +44,10 @@ img {
         <div class="container2">
             {% if data!="" %}
     {% for item in data %}
+    <a href='http://localhost:5001/user?user={{item.user_id_str}}' name="user">User : {{ item.user_name }}</a>
     <p>Tweet : {{ item.text }}</p>
             <p>Created at : {{item.created_at}}</p>
                 <p>Retweet Count : {{item.retweet_count}}</p>
-    <a href='http://localhost:5001/user?user={{item.user_id_str}}' name="user">User : {{ item.user_id_str }}</a>
     {% endfor %}
     {% endif %}
     {% if userdata!="" %}
