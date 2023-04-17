@@ -35,7 +35,13 @@ def fuzzy_matching2(search_string):
     }
       ,
         
+        {
+    "$limit": 10
+  }
         
+     
+        
+        ,
     {
         "$project": {
             "_id": 0,
