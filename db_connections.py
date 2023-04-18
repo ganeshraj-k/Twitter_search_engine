@@ -14,12 +14,12 @@ def get_mongo_engine():
     except Exception as e:
         print(f'Unable to retrieve the connection : {e}')
 
-def create_engine_postgres(host, database, user, password, port):
+def create_engine_postgres():
     conn = psycopg2.connect(
-        host=host,
-        database=database,
-        user=user,
-        password=password,
-        port=port
+        host="localhost",
+        database="TwitterDatabase",
+        user="postgres",
+        password="India@2194",
+        port=5432
     )
     return conn

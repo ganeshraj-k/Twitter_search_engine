@@ -10,7 +10,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
 tweet_collection = get_mongo_engine()
-#conn = create_engine_postgres()
+conn = create_engine_postgres()
 
 def query(sql_query, conn):
  	df = pd.read_sql_query(sql_query, conn)
@@ -91,10 +91,10 @@ def get_info_by_user(user_name):
 		                            followers_count, friends_count, favourites_count, statuses_count,
 		                            protected
 		                            FROM users 
-							WHERE name LIKE %{user_name}%
+							WHERE (name LIKE '%{user_name}%') OR (screen_name LIKE '%{user_name}%')
 							""", conn)
 		#tweets = tweet_collection.find({"user_id_str": df.iloc[0,0]},{'created_at': 1, 'retweet_count': 1, 'user_id_str': 1,  'id_str':1, 'text':1, 'followers_count':1,'friends_count':1, 'hashtags':1, '_id': 0}).sort([('retweet_count', pymongo.DESCENDING)]).limit(10)
-		df_users = pd.DataFrame(list(df_users))
+		print(df_users)
 		#df_final = df.merge(df_tweets, on = 'user_id_str')
 		return json.loads(df_users.to_json(orient='records', date_format='iso'))
 	except Exception as e:
