@@ -1,62 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
     <style>
-  .container {
-  display: flex;
-  align-items: center;
-  justify-content: center ;
-}
-        .container2 {
-  align-items: center;
-  justify-content: center;
-}
+      .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .container2 {
+        align-items: center;
+        justify-content: center;
+      }
 
-img {
-  max-width: 30%;
-  max-height:30%;
-    float:right;
-}
+      img {
+        max-width: 30%;
+        max-height: 30%;
+        float: right;
+      }
 
-.text {
-  font-size: 20px;
-}
-        
-  </style>
-<body>
-     <br/>
-          <br/>
+      .text {
+        font-size: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <br />
+    <br />
     <div class="container">
       <div>
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4n_urpJ9XpwOTdzBVbGvactwHrPagYQrTJPYjxfxLGkSyu7nJZVqRVGAeohnPgKMrnKE&usqp=CAU" />
       </div>
       <div class="text">
-        <h1 style="color:DeepSkyBlue;">Welcome to ChirpSearch</h1>
+        <h1 style="color: DeepSkyBlue;">Welcome to ChirpSearch</h1>
       </div>
     </div>
-    <br/>
-    <br/>
-    <br/>
-    <form action = "http://localhost:5001/search" method = "post">
-        <div class="container">
-                <td><input style="width: 500px;" type ="text" name ="searchstring" placeholder="Search the chirp"></td>&nbsp;&nbsp;&nbsp;
-                <td><input type ="submit" value="Search" size="1000"></td>
-        </div>
-        <div class="container2">
-            {% if data!="" %}
-    {% for item in data %}
-    <a href='http://localhost:5001/user?user={{item.user_id_str}}' name="user">User : {{ item.user_name }}</a>
-    <p>Tweet : {{ item.text }}</p>
-            <p>Created at : {{item.created_at}}</p>
-                <p>Retweet Count : {{item.retweet_count}}</p>
-    {% endfor %}
-    {% endif %}
-    {% if userdata!="" %}
-            {% for usr in userdata %}
-    <p>User Name : {{usr.name}}</p>
-    <p>User Screen Name : {{usr.screename}}</p>
-          {% endfor %}  
-    {% endif %}
-</div>
+    <br />
+    <br />
+    <br />
+    <form action="http://localhost:5001/search" method="post">
+      <div class="container">
+        <td><input style="width: 500px;" type="text" name="searchstring" placeholder="Search the chirp"></td>&nbsp;&nbsp;&nbsp;
+        <td><input type="submit" value="Search" size="1000"></td>
+      </div>
+      <div class="container2">
+        {% if data!="" %}
+        {% for item in data %}
+        <a href='http://localhost:5001/user?user={{item.user_id_str}}' name="user">User : {{ item.user_name }}</a>
+        <p>Tweet : {{ item.text }}</p>
+        <p>Created at : {{item.created_at}}</p>
+        <a href='http://localhost:5001/retweets?tweetid={{item.id_str}}' name="retweet">Retweet Count : {{ item.retweet_count }}</a>
+         <hr>
+        {% endfor %}
+        {% endif %}
+        {% if userdata!="" %}
+        {% for usr in userdata %}
+        <p>User Name : {{usr.name}}</p>
+        <p>User Screen Name : {{usr.screen_name}}</p>
+        <p>No. of Followers : {{usr.followers_count}}</p>
+        <p>Following : {{usr.friends_count}}</p>
+        <a href='http://localhost:5001/userTweet?userid={{item.user_id_str}}' name="usertweet">Tweets made : {{usr.statuses_count}}</a>
+        <p>No. of Tweets Liked : {{usr.favourites_count}}
+        {% endfor %}  
+        {% endif %}
+      </div>
     </form>
-</body>
+  </body>
 </html>
