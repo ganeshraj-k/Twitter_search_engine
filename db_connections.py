@@ -1,6 +1,8 @@
 import pymongo
 from pymongo import MongoClient
 import psycopg2
+import os
+import json
 
 def get_mongo_engine():
     try:
@@ -23,3 +25,11 @@ def create_engine_postgres():
         port=5432
     )
     return conn
+
+def fetch_cache():
+    print("Fetching Cache")
+    cached_data=[]
+    if(os.path.isfile("CacheFile.json")):
+        with open("CacheFile.json","r") as cache_file:
+            cached_data = json.load(cache_file)['cached_queries']
+    return cached_data
