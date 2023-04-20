@@ -11,7 +11,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
 tweet_collection = get_mongo_engine()
-#conn = create_engine_postgres()
+conn = create_engine_postgres()
 
 def query(sql_query, conn):
  	df = pd.read_sql_query(sql_query, conn)
@@ -109,14 +109,9 @@ def get_info_by_user(user_name = None , user_id = None):
 			else:
 				return cached_result
 		elif user_id:
-			df_users = query(f"""SELECT id_str as user_id_str, name, screen_name, verified, 
-			                            followers_count, friends_count, favourites_count, statuses_count,
-			                            protected
-			                            FROM users 
-								WHERE id_str = {user_id}
-								ORDER BY followers_count DESC
-								""", conn)
-			return json.loads(df_users.to_json(orient='records', date_format='iso'))
+			tweets = tweet_collection.find({'user_id_str':user_id},{'created_at': 1, 'retweet_count': 1, 'user_id_str': 1,  'id_str':1, 'text':1, 'followers_count':1,'friends_count':1, 'hashtags':1, '_id': 0}).sort([('retweet_count', pymongo.DESCENDING)]).limit(10)
+			df_final = pd.DataFrame(list(tweets))
+			return json.loads(df_final.to_json(orient='records', date_format='iso'))
 
 		#tweets = tweet_collection.find({"user_id_str": df.iloc[0,0]},{'created_at': 1, 'retweet_count': 1, 'user_id_str': 1,  'id_str':1, 'text':1, 'followers_count':1,'friends_count':1, 'hashtags':1, '_id': 0}).sort([('retweet_count', pymongo.DESCENDING)]).limit(10)
 		#df_final = df.merge(df_tweets, on = 'user_id_str')

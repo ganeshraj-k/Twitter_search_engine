@@ -59,7 +59,7 @@
         <p>User Screen Name : {{usr.screen_name}}</p>
         <p>No. of Followers : {{usr.followers_count}}</p>
         <p>Following : {{usr.friends_count}}</p>
-        <a href='http://localhost:5001/userTweet?userid={{item.user_id_str}}' name="usertweet">Tweets made : {{usr.statuses_count}}</a>
+        <a href='http://localhost:5001/userTweet?userid={{usr.user_id_str}}' name="usertweet">Tweets made : {{usr.statuses_count}}</a>
         <p>No. of Tweets Liked : {{usr.favourites_count}}
         {% endfor %}  
         {% endif %}
