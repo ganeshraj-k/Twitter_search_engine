@@ -6,6 +6,7 @@ app=Flask(__name__)
 @app.route('/search',methods=['POST'])
 def search():
 	userdata=""
+	data = ""
 	search_str = request.form['searchstring']
 	if search_str.startswith('@'):
 		search_str = search_str[1:]
@@ -24,8 +25,8 @@ def getuser():
 
 @app.route('/userTweet', methods=["GET"])
 def getTweetsByUser():
-    uname = request.args.get('userid')
-    tweetdata = get_info_by_user(uname)
+    uid = request.args.get('userid')
+    tweetdata = get_info_by_user(user_id = uid)
     return render_template('mypage.html',userdata="",data=tweetdata)
 
 @app.route('/retweets', methods=["GET"])
