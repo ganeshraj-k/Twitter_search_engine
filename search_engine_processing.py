@@ -70,13 +70,16 @@ def fuzzy_matching(search_string):
 	return result
 
 #def convert_tweets_df(tweets):
-def get_info_by_hashtag(hashtags):
+def get_info_by_hashtag(hashtags, comma_separated = False):
 	try:
 		cached_result = Search_Cache(hashtags)
 		if cached_result == []:
-			hashtags_list = hashtags.split('#')
+			if comma_separated:
+				hashtags_list = hashtags.split('#')
+			else:
+				hashtags_list = hashtags.split('#')
 			query = { "hashtags": { "$in": [hashtags_list] } }
-			tweets = tweet_collection.find(query,{'tweet_str': 1, 'created_at': 1, 'retweet_count': 1, 'user_id_str': 1, 'user_name':1, 'id_str':1, 'hashtags':1, '_id': 0}).sort([('retweet_count', pymongo.DESCENDING)]).limit(10)			
+			tweets = tweet_collection.find(query,{'tweet_str': 1, 'created_at': 1, 'retweet_count': 1, 'user_id_str': 1, 'user_name':1, 'tweet':1, 'id_str':1, 'hashtags':1, '_id': 0}).sort([('retweet_count', pymongo.DESCENDING)]).limit(10)			
 			df_final = pd.DataFrame(list(tweets))
 			hashtag_output =  json.loads(df_final.to_json(orient='records', date_format='iso'))
 			Write_Cache(hashtags, hashtag_output)
@@ -96,21 +99,24 @@ def get_info_by_user(user_name = None , user_id = None):
 	try:
 		if user_name:
 			cached_result = Search_Cache(user_name)
-			if cached_result == []:					
+			if cached_result == []:
+				print('Not From Cache')
 				df_users = query(f"""SELECT id_str as user_id_str, name, screen_name, verified, 
-				                            followers_count, friends_count, favourites_count, statuses_count,
-				                            protected
-				                            FROM users 
-									WHERE (name LIKE '%{user_name}%') OR (screen_name LIKE '%{user_name}%')
-									""", conn)
+									followers_count, friends_count, favourites_count, statuses_count,
+									protected
+								FROM users 
+								WHERE (name LIKE '%{user_name}%') OR (screen_name LIKE '%{user_name}%')
+							 """, conn)
 				users_output = json.loads(df_users.to_json(orient='records', date_format='iso'))
 				Write_Cache(user_name, users_output)
 				return users_output
 			else:
+				print('From Cache')
 				return cached_result
 		elif user_id:
-			tweets = tweet_collection.find({'user_id_str':user_id},{'created_at': 1, 'retweet_count': 1, 'user_id_str': 1,  'id_str':1, 'text':1, 'followers_count':1,'friends_count':1, 'hashtags':1, '_id': 0}).sort([('retweet_count', pymongo.DESCENDING)]).limit(10)
+			tweets = tweet_collection.find({'user_id_str':user_id},{'created_at': 1, 'retweet_count': 1, 'user_id_str': 1,  'id_str':1, 'text':1, 'followers_count':1,'friends_count':1, 'hashtags':1, 'user_name':1, '_id': 0}).sort([('retweet_count', pymongo.DESCENDING)]).limit(10)
 			df_final = pd.DataFrame(list(tweets))
+			print(len(df_final))
 			return json.loads(df_final.to_json(orient='records', date_format='iso'))
 
 		#tweets = tweet_collection.find({"user_id_str": df.iloc[0,0]},{'created_at': 1, 'retweet_count': 1, 'user_id_str': 1,  'id_str':1, 'text':1, 'followers_count':1,'friends_count':1, 'hashtags':1, '_id': 0}).sort([('retweet_count', pymongo.DESCENDING)]).limit(10)
@@ -163,19 +169,30 @@ def get_info_by_tweet(tweet_str = None, oc_tweet_id = None, tweet_id = None):
 def get_top_10_details(top10):
 	try:
 		if top10 == 'tweets':
-			tweets = tweet_collection.find({'created_at': 1,'text':1, 'retweet_count': 1, 'user_id_str': 1, 'user_name': 1, 'hashtags': 1, 'text':1, 'id_str':1, '_id': 0}).sort([('retweet_count', pymongo.DESCENDING)]).limit(10)		    
-			df_final = pd.DataFrame(list(tweets))
+			cached_result = Search_Cache('top_10_tweets')
+			if cached_result == []:
+				tweets = tweet_collection.find({'created_at': 1,'text':1, 'retweet_count': 1, 'user_id_str': 1, 'user_name': 1, 'hashtags': 1, 'text':1, 'id_str':1, '_id': 0}).sort([('retweet_count', pymongo.DESCENDING)]).limit(10)		    
+				df_final = pd.DataFrame(list(tweets))
+				tweet_output = json.loads(df_final.to_json(orient='records', date_format='iso'))
+				Write_Cache('top_10_tweets', tweet_output)
+				return tweet_output
+			else:
+				return cached_result
 		elif top10 == 'users':
-			df_final = query(f"""SELECT id_str as user_id_str, name, screen_name, verified, 
-				                            followers_count, friends_count, favourites_count, statuses_count,
-				                            protected
-				                            FROM users 
-									ORDER BY followers DESC 
-									LIMIT 10
-									""", conn)
+			cached_result = Search_Cache('top_10_users')
+			if cached_result == []:
+				df_final = query(f"""SELECT id_str as user_id_str, name, screen_name, verified, 
+					                            followers_count, friends_count, favourites_count, statuses_count,
+					                            protected
+					                            FROM users 
+										ORDER BY followers DESC 
+										LIMIT 10
+										""", conn)
+				user_output = json.loads(df_final.to_json(orient='records', date_format='iso'))
+				Write_Cache('top_10_users', user_output)
+				return user_output
 		else:
 			pass
-		return json.loads(df_final.to_json(orient='records', date_format='iso'))
 	except Exception as e:
 		print(f"Retrieval of 10 ten {top10} failed")
 
