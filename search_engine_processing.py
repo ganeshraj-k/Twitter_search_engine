@@ -72,30 +72,31 @@ def fuzzy_matching(search_string):
 
 #def convert_tweets_df(tweets):
 def get_info_by_hashtag(hashtags, comma_separated = False):
-    try:
-        cached_result = python_cache_demo.Search_Cache(hashtags)
-        if cached_result[0] == []:
-            if comma_separated:
-                hashtags_list = hashtags.split('#')
-            else:
-                hashtags_list = hashtags.split('#')
-            query = { "hashtags": { "$in": [hashtags_list] } }
-            tweets = tweet_collection.find(query,{'tweet_str': 1, 'created_at': 1, 'retweet_count': 1, 'user_id_str': 1, 'user_name':1, 'tweet':1, 'id_str':1, 'hashtags':1, '_id': 0}).sort([('retweet_count', pymongo.DESCENDING)]).limit(10)
-            df_final = pd.DataFrame(list(tweets))
-            hashtag_output =  json.loads(df_final.to_json(orient='records', date_format='iso'))
-            if cached_result[1]==0:
-                python_cache_demo.Write_Cache(hashtags, hashtag_output)
-            return hashtag_output
-        else:
-            return cached_result[0]
+	try:
+		cached_result = python_cache_demo.Search_Cache(hashtags)
+		cached_result[0] = []
+		if cached_result[0] == []:
+			if comma_separated:
+				hashtags_list = hashtags.split('#')
+			else:
+				hashtags_list = hashtags.split('#')
+			query = { "hashtags": { "$in": [hashtags_list] } }
+			tweets = tweet_collection.find(query,{'tweet_str': 1, 'created_at': 1, 'retweet_count': 1, 'user_id_str': 1, 'user_name':1, 'text':1, 'id_str':1, 'hashtags':1, '_id': 0}).sort([('retweet_count', pymongo.DESCENDING)]).limit(10)
+			df_final = pd.DataFrame(list(tweets))
+			hashtag_output =  json.loads(df_final.to_json(orient='records', date_format='iso'))
+			if cached_result[1]==0:
+				python_cache_demo.Write_Cache(hashtags, hashtag_output)
+			return hashtag_output
+		else:
+			return cached_result[0]
 
-        #df_users = query(f"""SELECT id_str, name FROM users 
-        #	                WHERE id_str = ({','.join(df_tweets.user_id_str.unique())}) """, conn)
+		#df_users = query(f"""SELECT id_str, name FROM users 
+		#	                WHERE id_str = ({','.join(df_tweets.user_id_str.unique())}) """, conn)
 
-        #df_final = df_tweets.merge(df_users, on = 'user_id_str') 
-        #df_final = df_final.drop('user_id_str', axis=1)
-    except Exception as e:
-        print(f"Retrieval of Tweet from hashtags failed : {e}")
+		#df_final = df_tweets.merge(df_users, on = 'user_id_str') 
+		#df_final = df_final.drop('user_id_str', axis=1)
+	except Exception as e:
+	    print(f"Retrieval of Tweet from hashtags failed : {e}")
 
 def get_info_by_user(user_name = None , user_id = None):
 	try:
