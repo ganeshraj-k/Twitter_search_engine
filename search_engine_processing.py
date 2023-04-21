@@ -10,6 +10,7 @@ import json
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
+
 tweet_collection = get_mongo_engine()
 conn = create_engine_postgres()
 
@@ -116,7 +117,6 @@ def get_info_by_user(user_name = None , user_id = None):
 		elif user_id:
 			tweets = tweet_collection.find({'user_id_str':user_id},{'created_at': 1, 'retweet_count': 1, 'user_id_str': 1,  'id_str':1, 'text':1, 'followers_count':1,'friends_count':1, 'hashtags':1, 'user_name':1, '_id': 0}).sort([('retweet_count', pymongo.DESCENDING)]).limit(10)
 			df_final = pd.DataFrame(list(tweets))
-			print(len(df_final))
 			return json.loads(df_final.to_json(orient='records', date_format='iso'))
 
         #tweets = tweet_collection.find({"user_id_str": df.iloc[0,0]},{'created_at': 1, 'retweet_count': 1, 'user_id_str': 1,  'id_str':1, 'text':1, 'followers_count':1,'friends_count':1, 'hashtags':1, '_id': 0}).sort([('retweet_count', pymongo.DESCENDING)]).limit(10)
@@ -169,9 +169,7 @@ def get_info_by_tweet(tweet_str = None, oc_tweet_id = None, tweet_id = None):
 
 def get_top_10_details(top10):
 	try:
-		print(top10)
 		if top10 == 'tweets':
-			print('hello rising ')
 			cached_result = python_cache_demo.Search_Cache('top_10_tweets')
 			if cached_result[0] == []:
 				tweets = tweet_collection.find({}, {'created_at': 1,'text':1, 'retweet_count': 1, 'user_id_str': 1, 'user_name': 1, 'hashtags': 1, 'text':1, 'id_str':1, '_id': 0}).sort([('retweet_count', pymongo.DESCENDING)]).limit(10)   
@@ -183,7 +181,6 @@ def get_top_10_details(top10):
 			else:
 				return cached_result[0]
 		elif top10 == 'users':
-			print('hi')
 			cached_result = python_cache_demo.Search_Cache('top_10_users')
 			if cached_result[0] == []:
 				df_final = query(f"""SELECT id_str as user_id_str, name, screen_name, verified, 
