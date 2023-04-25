@@ -33,8 +33,8 @@ class StoreCache(threading.Thread):
             time.sleep(self.delay)
             update_cache()
 
-t = StoreCache(60)
-t.start()
+t = StoreCache(600)
+t.start()       
 
 def get_top_cache_data():
     global cached_data
@@ -58,7 +58,6 @@ def Search_Cache(search_string):
                 
                 cached_data[search_string]['counter']+=1
                 search_result[0] = cached_data[search_string]['result']
-                #Calling refresh
                 cached_data = refresh()
                 search_result[1]=1
                 return search_result
