@@ -14,12 +14,10 @@ DATA STORAGE
 The data has been split into user data and tweets data. User data has been housed locally on Postgres.
 Tweets data is stored on MongoDB.
 
-INSTALLATION AND RUNNING THE APPLICATION:
-
-
-
-
-
+RUNNING THE APPLICATION
+- Run python file containing the flask framework
+- The flask framework and Web UI should be up and running
+- Now search for the required word or phrase using the web UI, the queried results will be displayed.
 
 TECH STACK USED:
 python, flask, mongoDB, PostgreSQL, json.
