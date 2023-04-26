@@ -69,7 +69,7 @@
         <div class="anchorflex">
             <p><b>HashTag : </b> </p>
             {% for hashtag in item.hashtags %}
-            <a href='http://localhost:5001/hashtag?hashtag={{hashtag}}' name="hashtag">{{ hashtag }}</a>
+            <a href='http://localhost:5001/hashtag?hashtag={{hashtag}}' name="hashtag">{{ hashtag }}</a>&nbsp;&nbsp;&nbsp;&nbsp;
             {% endfor %}
         </div>
         <hr>
@@ -82,7 +82,7 @@
         <p>No. of Followers : {{usr.followers_count}}</p>
         <p>Following : {{usr.friends_count}}</p>
         <a href='http://localhost:5001/userTweet?userid={{usr.user_id_str}}' name="usertweet">Tweets made : {{usr.statuses_count}}</a>
-        <p>No. of Tweets Liked : {{usr.favourites_count}}
+          <p>No. of Tweets Liked : {{usr.favourites_count}}</p><hr>
         {% endfor %}  
         {% endif %}
       </div>
