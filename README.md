@@ -1,6 +1,4 @@
-# 694-2023-7
-
-CHIRPSEARCH
+# CHIRPSEARCH
 
 
 DESCRIPTION: A search application that queries tweets efficiently from a dataset. This project has been 
