@@ -73,7 +73,7 @@ def fuzzy_matching(search_string):
     return result
 
 #Function to get results of hashtag
-def get_info_by_hashtag(hashtags, comma_separated = False, toDate=None, fromDate=None):
+def get_info_by_hashtag(hashtags, fromClick = False, toDate=None, fromDate=None):
     '''
     Input : hashtag name, toDate : to filter by start date, fromDate: to filter by end date
     result: list of Tweets having hashtags
@@ -82,8 +82,8 @@ def get_info_by_hashtag(hashtags, comma_separated = False, toDate=None, fromDate
         cached_result = python_cache.Search_Cache(hashtags)
         if cached_result[0] == []:
             print('NOT FROM CACHE')
-            if comma_separated:
-                hashtags_list = hashtags.split('#')
+            if fromClick:
+                hashtags_list = [hashtags]
             else:
                 hashtags_list = hashtags.split('#')
             query = { "hashtags": { "$in": [hashtags_list] } }

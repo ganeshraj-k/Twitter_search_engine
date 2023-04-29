@@ -26,7 +26,7 @@ def search():
         start_time = time.time()  #
         data = get_info_by_hashtag(search_str[1:], toDate=toDate,fromDate=fromDate)
         end_time = time.time()  # record the end time
-        elapsed_time = end_time - start_time\
+        elapsed_time = end_time - start_time
         data = [{'elapsed_time':elapsed_time},data]
     else:
         start_time = time.time()  #
@@ -65,7 +65,7 @@ def getretweetsbyTweetID():
 @app.route('/hashtag',methods=['GET'])
 def getTweetsbyHashtag():
     hashtag = request.args.get('hashtag')
-    tweetdata = get_info_by_tweet(hashtag,True)
+    tweetdata = get_info_by_hashtag(hashtag,True)
     return render_template('mypage.html',userdata="",data=tweetdata)
 
 #Route to get top10 user/tweets
