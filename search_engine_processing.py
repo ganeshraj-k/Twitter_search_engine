@@ -70,7 +70,7 @@ def fuzzy_matching(search_string):
     return result
 
 #def convert_tweets_df(tweets):
-def get_info_by_hashtag(hashtags, comma_separated = False):
+def get_info_by_hashtag(hashtags, comma_separated = False, toDate=None, fromDate=None):
     try:
         cached_result = python_cache_demo.Search_Cache(hashtags)
         if cached_result[0] == []:
@@ -82,6 +82,8 @@ def get_info_by_hashtag(hashtags, comma_separated = False):
             query = { "hashtags": { "$in": [hashtags_list] } }
             tweets = tweet_collection.find(query,{'tweet_str': 1, 'created_at': 1, 'retweet_count': 1, 'user_id_str': 1, 'user_name':1, 'text':1, 'id_str':1, 'hashtags':1, '_id': 0}).sort([('retweet_count', pymongo.DESCENDING)]).limit(10)
             df_final = pd.DataFrame(list(tweets))
+            if toDate:
+                	df_final = df_final.loc[(df_final['created_at'] >= toDate) & (df_final['created_at'] <= fromDate)]
             hashtag_output =  json.loads(df_final.to_json(orient='records', date_format='iso'))
             if cached_result[1]==0:
                 python_cache_demo.Write_Cache(hashtags, hashtag_output)
@@ -122,13 +124,13 @@ def get_info_by_user(user_name = None , user_id = None):
 def get_info_by_tweet(tweet_str = None, oc_tweet_id = None, tweet_id = None, toDate=None, fromDate=None):
     try:
         if tweet_str:
-            print("toDate",toDate)
-            print("fromDate",fromDate)
             cached_result = python_cache_demo.Search_Cache(tweet_str)
             if cached_result[0] == []:
                 print('NOT FROM CACHE')
                 tweets = fuzzy_matching(tweet_str)
                 df_final = pd.DataFrame(list(tweets))
+                if toDate:
+                	df_final = df_final.loc[(df_final['created_at'] >= toDate) & (df_final['created_at'] <= fromDate)]
                 tweet_output = json.loads(df_final.to_json(orient='records', date_format='iso'))
                 if cached_result[1]==0:
                     python_cache_demo.Write_Cache(tweet_str, tweet_output)

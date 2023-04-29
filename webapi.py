@@ -24,7 +24,7 @@ def search():
     # record the end time
     elif search_str.startswith('#'):
         start_time = time.time()  #
-        data = get_info_by_hashtag(search_str[1:])
+        data = get_info_by_hashtag(search_str[1:], toDate=toDate,fromDate=fromDate)
         end_time = time.time()  # record the end time
         elapsed_time = end_time - start_time
         #data.append({'elapsed_time':elapsed_time})
