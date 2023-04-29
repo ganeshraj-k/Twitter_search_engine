@@ -133,7 +133,7 @@ def get_info_by_user(user_name = None , user_id = None):
         print(f"Retrieval of Tweet from username failed : {e}")
 
 #Function to get the tweets based on tweetid or search string or dates
-def get_info_by_tweet(tweet_str = None, oc_tweet_id = None, tweet_id = None, toDate=None, fromDate=None):
+def get_info_by_tweet(tweet_str = None, oc_tweet_id = None, toDate=None, fromDate=None):
     '''
     Input : search string, original tweet id if searched for retweets,
     toDate : to filter by start date, fromDate: to filter by end date
@@ -157,10 +157,7 @@ def get_info_by_tweet(tweet_str = None, oc_tweet_id = None, tweet_id = None, toD
                 return cached_result[0]
 
         if oc_tweet_id:
-            tweets = tweet_collection.find({"oc_tweet_id": oc_tweet_id},{'created_at': 1,'text':1, 'retweet_count': 1, 'user_id_str': 1, 'user_name': 1, 'hashtags': 1, 'text':1, 'id_str':1, '_id': 0}).sort([('retweet_count', pymongo.DESCENDING)]).limit(10)    
-
-        if tweet_id:
-            tweets = tweet_collection.find({"id_str": tweet_id},{'created_at': 1,'text':1, 'retweet_count': 1, 'user_id_str': 1, 'user_name': 1, 'hashtags': 1, 'text':1, 'id_str':1, '_id': 0}).sort([('retweet_count', pymongo.DESCENDING)]).limit(10)
+            tweets = tweet_collection.find({"oc_tweet_id": oc_tweet_id},{'created_at': 1,'text':1, 'retweet_count': 1, 'user_id_str': 1, 'user_name': 1, 'hashtags': 1, 'text':1, 'id_str':1, '_id': 0}).sort([('retweet_count', pymongo.DESCENDING)]).limit(10)      
 
         df_final = pd.DataFrame(list(tweets))
         return json.loads(df_final.to_json(orient='records', date_format='iso'))
