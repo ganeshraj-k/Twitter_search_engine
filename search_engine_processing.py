@@ -3,7 +3,7 @@ import psycopg2
 import pymongo
 from pymongo import MongoClient
 from db_connections import get_mongo_engine, create_engine_postgres
-import python_cache_demo
+import python_cache
 import nltk
 import string
 import json
@@ -74,8 +74,12 @@ def fuzzy_matching(search_string):
 
 #Function to get results of hashtag
 def get_info_by_hashtag(hashtags, comma_separated = False, toDate=None, fromDate=None):
+    '''
+    Input : hashtag name, toDate : to filter by start date, fromDate: to filter by end date
+    result: list of Tweets having hashtags
+    '''
     try:
-        cached_result = python_cache_demo.Search_Cache(hashtags)
+        cached_result = python_cache.Search_Cache(hashtags)
         if cached_result[0] == []:
             print('NOT FROM CACHE')
             if comma_separated:
@@ -89,7 +93,7 @@ def get_info_by_hashtag(hashtags, comma_separated = False, toDate=None, fromDate
                 	df_final = df_final.loc[(df_final['created_at'] >= toDate) & (df_final['created_at'] <= fromDate)]
             hashtag_output =  json.loads(df_final.to_json(orient='records', date_format='iso'))
             if cached_result[1]==0:
-                python_cache_demo.Write_Cache(hashtags, hashtag_output)
+                python_cache.Write_Cache(hashtags, hashtag_output)
             return hashtag_output
         else:
             print('FROM CACHE')
@@ -99,9 +103,13 @@ def get_info_by_hashtag(hashtags, comma_separated = False, toDate=None, fromDate
         
 #Function to get information of user
 def get_info_by_user(user_name = None , user_id = None):
+    '''
+    Input : user name if clicked on username in tweets, userid if searched with @
+    result: information of the user
+    '''
     try:
         if user_name:
-            cached_result = python_cache_demo.Search_Cache(user_name)
+            cached_result = python_cache.Search_Cache(user_name)
             if cached_result[0] == []:
                 print('NOT FROM CACHE')
                 df_users = query(f"""SELECT id_str as user_id_str, name, screen_name, verified, 
@@ -112,7 +120,7 @@ def get_info_by_user(user_name = None , user_id = None):
                              """, conn)
                 users_output = json.loads(df_users.to_json(orient='records', date_format='iso'))
                 if cached_result[1]==0:
-                    python_cache_demo.Write_Cache(user_name, users_output)
+                    python_cache.Write_Cache(user_name, users_output)
                 return users_output
             else:
                 print('FROM CACHE')
@@ -126,9 +134,14 @@ def get_info_by_user(user_name = None , user_id = None):
 
 #Function to get the tweets based on tweetid or search string or dates
 def get_info_by_tweet(tweet_str = None, oc_tweet_id = None, tweet_id = None, toDate=None, fromDate=None):
+    '''
+    Input : search string, original tweet id if searched for retweets,
+    toDate : to filter by start date, fromDate: to filter by end date
+    result: list of Tweets having matching the search string
+    '''
     try:
         if tweet_str:
-            cached_result = python_cache_demo.Search_Cache(tweet_str)
+            cached_result = python_cache.Search_Cache(tweet_str)
             if cached_result[0] == []:
                 print('NOT FROM CACHE')
                 tweets = fuzzy_matching(tweet_str)
@@ -137,7 +150,7 @@ def get_info_by_tweet(tweet_str = None, oc_tweet_id = None, tweet_id = None, toD
                 	df_final = df_final.loc[(df_final['created_at'] >= toDate) & (df_final['created_at'] <= fromDate)]
                 tweet_output = json.loads(df_final.to_json(orient='records', date_format='iso'))
                 if cached_result[1]==0:
-                    python_cache_demo.Write_Cache(tweet_str, tweet_output)
+                    python_cache.Write_Cache(tweet_str, tweet_output)
                 return tweet_output
             else:
                 print('FROM CACHE')
@@ -157,20 +170,24 @@ def get_info_by_tweet(tweet_str = None, oc_tweet_id = None, tweet_id = None, toD
 
 #Function to get top 10 users or top 10 tweets
 def get_top_10_details(top10):
+    '''
+    Input : tweets or user
+    result: list of Tweets having matching the search string
+    '''
     try:
         if top10 == 'tweets':
-            cached_result = python_cache_demo.Search_Cache('top_10_tweets')
+            cached_result = python_cache.Search_Cache('top_10_tweets')
             if cached_result[0] == []:
                 tweets = tweet_collection.find({}, {'created_at': 1,'text':1, 'retweet_count': 1, 'user_id_str': 1, 'user_name': 1, 'hashtags': 1, 'text':1, 'id_str':1, '_id': 0}).sort([('retweet_count', pymongo.DESCENDING)]).limit(10)   
                 df_final = pd.DataFrame(list(tweets))
                 tweet_output = json.loads(df_final.to_json(orient='records', date_format='iso'))
                 if cached_result[1]==0:
-                    python_cache_demo.Write_Cache('top_10_tweets', tweet_output)
+                    python_cache.Write_Cache('top_10_tweets', tweet_output)
                 return tweet_output
             else:
                 return cached_result[0]
         elif top10 == 'users':
-            cached_result = python_cache_demo.Search_Cache('top_10_users')
+            cached_result = python_cache.Search_Cache('top_10_users')
             if cached_result[0] == []:
                 df_final = query(f"""SELECT id_str as user_id_str, name, screen_name, verified, created_at
                                         followers_count, friends_count, favourites_count, statuses_count,
@@ -181,7 +198,7 @@ def get_top_10_details(top10):
                                     """, conn)
                 user_output = json.loads(df_final.to_json(orient='records', date_format='iso'))
                 if cached_result[1]==0:
-                    python_cache_demo.Write_Cache('top_10_users', user_output)
+                    python_cache.Write_Cache('top_10_users', user_output)
                 return user_output
             else:
                 return cached_result[0]
