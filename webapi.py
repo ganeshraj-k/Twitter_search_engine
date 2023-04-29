@@ -50,23 +50,35 @@ def getuser():
 #Route to get tweets made by user when tweet counts
 @app.route('/userTweet', methods=["GET"])
 def getTweetsByUser():
+    start_time = time.time()  #
     uid = request.args.get('userid')
     tweetdata = get_info_by_user(user_id = uid)
-    return render_template('mypage.html',userdata="",data=tweetdata)
+    end_time = time.time()  # record the end time
+    elapsed_time = end_time - start_time
+    finalData = [{'elapsed_time':elapsed_time},tweetdata]
+    return render_template('mypage.html',userdata="",data=finalData)
 
 #Route to get retweets of the tweet
 @app.route('/retweets', methods=["GET"])
 def getretweetsbyTweetID():
+    start_time = time.time()  #
     octweetid = request.args.get('tweetid')
     tweetdata = get_info_by_tweet(oc_tweet_id=octweetid)
-    return render_template('mypage.html',userdata="",data=tweetdata)
+    end_time = time.time()  # record the end time
+    elapsed_time = end_time - start_time
+    finalData = [{'elapsed_time':elapsed_time},tweetdata]
+    return render_template('mypage.html',userdata="",data=finalData)
 
 #Route to get info by hashtag when clicked on hashtag
 @app.route('/hashtag',methods=['GET'])
 def getTweetsbyHashtag():
+    start_time = time.time()  #
     hashtag = request.args.get('hashtag')
     tweetdata = get_info_by_hashtag(hashtag,True)
-    return render_template('mypage.html',userdata="",data=tweetdata)
+    end_time = time.time()  # record the end time
+    elapsed_time = end_time - start_time
+    finalData = [{'elapsed_time':elapsed_time},tweetdata]
+    return render_template('mypage.html',userdata="",data=finalData)
 
 #Route to get top10 user/tweets
 @app.route('/topDetails',methods=['GET'])

@@ -33,8 +33,8 @@ class StoreCache(threading.Thread):
             time.sleep(self.delay)
             update_cache()
 
-#t = StoreCache(600)
-#t.start()       
+t = StoreCache(600)
+t.start()       
 
 def get_top_cache_data():
     global cached_data
