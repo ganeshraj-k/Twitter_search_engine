@@ -8,27 +8,34 @@ app=Flask(__name__)
 def search():
     userdata=""
     data = ""
+    toDate=""
+    fromDate=""
     search_str = request.form['searchstring']
+    toDate = request.form['toDate']
+    fromDate = request.form['fromDate']
     if search_str.startswith('@'):
         search_str = search_str[1:]
         start_time = time.time()  # record the start time
         userdata = get_info_by_user(search_str)
         end_time = time.time() 
         elapsed_time = end_time - start_time
-        userdata.append({'elapsed_time':elapsed_time})
+        #userdata.append({'elapsed_time':elapsed_time})
+        userdata = [{'elapsed_time':elapsed_time},userdata]
     # record the end time
     elif search_str.startswith('#'):
         start_time = time.time()  #
         data = get_info_by_hashtag(search_str[1:])
         end_time = time.time()  # record the end time
         elapsed_time = end_time - start_time
-        data.append({'elapsed_time':elapsed_time})
+        #data.append({'elapsed_time':elapsed_time})
+        data = [{'elapsed_time':elapsed_time},data]
     else:
         start_time = time.time()  #
-        data = get_info_by_tweet(tweet_str = search_str)
+        data = get_info_by_tweet(tweet_str = search_str, toDate=toDate,fromDate=fromDate)
         end_time = time.time()  # record the end time
         elapsed_time = end_time - start_time
-        data.append({'elapsed_time':elapsed_time})
+        #data.append({'elapsed_time':elapsed_time})
+        data = [{'elapsed_time':elapsed_time},data]
     return render_template('mypage.html',data=data,userdata=userdata)
 
 @app.route('/user',methods=['GET'])
@@ -38,8 +45,9 @@ def getuser():
     userdata = get_info_by_user(user_name=uname)
     end_time = time.time()  # record the end time
     elapsed_time = end_time - start_time
-    userdata.append({'elapsed_time':elapsed_time})
-    return render_template('mypage.html',userdata=userdata,data="")
+    finalData = [{'elapsed_time':elapsed_time},userdata]
+    #userdata.append({'elapsed_time':elapsed_time})
+    return render_template('mypage.html',userdata=finalData,data="")
 
 @app.route('/userTweet', methods=["GET"])
 def getTweetsByUser():
@@ -67,11 +75,12 @@ def getTopDetails():
     data = get_top_10_details(reqType)
     end_time = time.time()  # record the end time
     elapsed_time = end_time - start_time
-    data.append({'elapsed_time':elapsed_time})
+    finalData = [{'elapsed_time':elapsed_time},data]
+    #data.append({'elapsed_time':elapsed_time})
     if reqType=="tweets":
-        return render_template('mypage.html',userdata="",data=data)
+        return render_template('mypage.html',userdata="",data=finalData)
     elif reqType=="users":
-        return render_template('mypage.html',userdata=data,data="")
+        return render_template('mypage.html',userdata=finalData,data="")
 
 @app.route('/')
 def load():

@@ -27,6 +27,10 @@
             display: flex;
             align-items: center;
         }
+        .time{
+        float:right;
+        color:green    
+        }
     </style>
   </head>
   <body>
@@ -43,6 +47,8 @@
       <div class="container">
         <td><input style="width: 500px;" type="text" name="searchstring" placeholder="Search the chirp"></td>&nbsp;&nbsp;&nbsp;
         <td><input type="submit" value="Search" size="1000" formaction="http://localhost:5001/search" formmethod="post"></td>
+        <td><input type="date" id="toDate" name="toDate"></td>
+        <td><input type="date" id="fromDate" name="fromDate"></td>      
       </div>
         <br/>
         <div class="container">
@@ -55,13 +61,14 @@
       </div>
       <div>
         {% if data!="" %}
-        {% for item in data %}
+        <p class="time"><u><b>Elapsed Time : </b></u>{{ data[0].elapsed_time }}</p>
+        {% for item in data[1] %}
         <div class="anchorflex">
             <p><b>User : </b></p>
             <a href='http://localhost:5001/user?user={{item.user_name}}' name="user">{{ item.user_name }}</a>
         </div>
-          <p><b>Tweet : </b>{{ item.text }}</p>
-          <p><b>Created at : </b>{{item.created_at}}</p>
+        <p><b>Tweet : </b>{{ item.text }}</p>
+        <p><b>Created at : </b>{{item.created_at}}</p>
         <div class="anchorflex">
             <p><b>Retweet Count : </b></p>
             <a href='http://localhost:5001/retweets?tweetid={{item.id_str}}' name="retweet">{{ item.retweet_count }}</a>
@@ -76,13 +83,17 @@
         {% endfor %}
         {% endif %}
         {% if userdata!="" %}
-        {% for usr in userdata %}
+        <p class="time"><u><b>Elapsed Time : </b></u>{{ userdata[0].elapsed_time }}</p>
+        {% for usr in userdata[1] %}
         <p>User Name : {{usr.name}}</p>
         <p>User Screen Name : {{usr.screen_name}}</p>
         <p>No. of Followers : {{usr.followers_count}}</p>
         <p>Following : {{usr.friends_count}}</p>
-        <a href='http://localhost:5001/userTweet?userid={{usr.user_id_str}}' name="usertweet">Tweets made : {{usr.statuses_count}}</a>
-          <p>No. of Tweets Liked : {{usr.favourites_count}}</p><hr>
+        <div class="anchorflex">
+            <p><b>Tweets made : </b></p>
+            <a href='http://localhost:5001/userTweet?userid={{usr.user_id_str}}' name="usertweet">{{usr.statuses_count}}</a>
+        </div> 
+        <p>No. of Tweets Liked : {{usr.favourites_count}}</p><hr>
         {% endfor %}  
         {% endif %}
       </div>
