@@ -10,13 +10,16 @@ import json
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
+#Get connections for datastores
 tweet_collection = get_mongo_engine()
 conn = create_engine_postgres()
 
+#Function to read the query
 def query(sql_query, conn):
     df = pd.read_sql_query(sql_query, conn)
     return df
 
+#Function to implement fuzzy matching and sort by score
 def fuzzy_matching(search_string):
     result = tweet_collection.aggregate([
         {
@@ -69,7 +72,7 @@ def fuzzy_matching(search_string):
     ])
     return result
 
-#def convert_tweets_df(tweets):
+#Function to get results of hashtag
 def get_info_by_hashtag(hashtags, comma_separated = False, toDate=None, fromDate=None):
     try:
         cached_result = python_cache_demo.Search_Cache(hashtags)
@@ -93,7 +96,8 @@ def get_info_by_hashtag(hashtags, comma_separated = False, toDate=None, fromDate
             return cached_result[0]
     except Exception as e:
         print(f"Retrieval of Tweet from hashtags failed : {e}")
-
+        
+#Function to get information of user
 def get_info_by_user(user_name = None , user_id = None):
     try:
         if user_name:
@@ -120,7 +124,7 @@ def get_info_by_user(user_name = None , user_id = None):
     except Exception as e:
         print(f"Retrieval of Tweet from username failed : {e}")
 
-
+#Function to get the tweets based on tweetid or search string or dates
 def get_info_by_tweet(tweet_str = None, oc_tweet_id = None, tweet_id = None, toDate=None, fromDate=None):
     try:
         if tweet_str:
@@ -151,6 +155,7 @@ def get_info_by_tweet(tweet_str = None, oc_tweet_id = None, tweet_id = None, toD
         print(f"Retrieval of Tweet Failed : {e}")
 
 
+#Function to get top 10 users or top 10 tweets
 def get_top_10_details(top10):
     try:
         if top10 == 'tweets':
