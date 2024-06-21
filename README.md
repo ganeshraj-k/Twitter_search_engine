@@ -1,26 +1,39 @@
-# CHIRPSEARCH
+# 🐦 CHIRPSEARCH: Your Tweet Query Engine
 
+## 📝 Description
+ChirpSearch is a robust search application designed to query tweets efficiently from a dataset. Developed as part of the Database Management Systems coursework at Rutgers University's MS in Data Science program, it offers a streamlined experience for exploring tweet data.
 
-DESCRIPTION: A search application that queries tweets efficiently from a dataset. This project has been 
-developed as a part of course work for Database Management Systems in the Rutgers MS DS program.
+## 🚀 Features
+ChirpSearch comes with a variety of features that allow for comprehensive exploration of tweet data:
+- **Tweet Search**: Search for specific tweets.
+- **Hashtag Search**: Find all tweets associated with a particular hashtag.
+- **User Search**: Retrieve all tweets from a specific user.
+- **Retweet Retrieval**: Get all retweets for an original tweet.
 
-FEATURES:
-- search by tweet
-- search by hashtag
-- search by user name
-- retrieve retweets for an original tweet
+## 💾 Data Storage
+The data for ChirpSearch is split into user data and tweets data for efficient storage and retrieval:
+- **User Data**: Stored locally on PostgreSQL.
+- **Tweets Data**: Housed on MongoDB for optimal performance.
 
-DATA STORAGE
-The data has been split into user data and tweets data. User data has been housed locally on Postgres.
-Tweets data is stored on MongoDB.
+## 🏃‍♂️ Running the Application
+To get ChirpSearch up and running, follow these steps:
+1. Run the Python file containing the Flask framework.
+2. Once the Flask framework and Web UI are running, you can start querying.
+3. Enter the required word or phrase using the Web UI, and the queried results will be displayed.
 
-RUNNING THE APPLICATION
-- Run python file containing the flask framework
-- The flask framework and Web UI should be up and running
-- Now search for the required word or phrase using the web UI, the queried results will be displayed.
+## 🛠️ Tech Stack
+ChirpSearch is built using a variety of technologies to ensure optimal performance and user experience:
+- Python
+- Flask
+- MongoDB
+- PostgreSQL
+- JSON
 
-TECH STACK USED:
-python, flask, mongoDB, PostgreSQL, json.
+## 👥 Project Owners
+ChirpSearch is the result of the hard work and dedication of the following individuals:
+- vishnuramj10
+- Noopur665
+- ankeetapriyam
+- ganeshraj-k
 
-PROJECT OWNERS:
-vishnuramj10, Noopur665, ankeetapriyam, ganeshraj-k
+Thank you for visiting the ChirpSearch repository. Happy searching! 🕵️‍♂️
